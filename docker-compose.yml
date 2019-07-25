@@ -1,0 +1,28 @@
+version: "3.7"
+services:
+ sqlite3:
+  image: nouchka/sqlite3:latest
+  stdin_open: true
+  tty: true
+  volumes:
+    - ./db/:/root/db/
+ mongodb:
+  image: mongo
+  container_name: mongodb
+  restart: always
+  ports:
+    - "27017:27017"
+  volumes:
+    - /data/mongodb:/data/db
+ web:
+  image: lordguerdo/rw3logger_web:latest
+  command: python manage.py runserver 0.0.0.0:8001
+  ports:
+    - "8001:8001"
+  links:
+    - sqlite3
+    - mongodb
+  extra_hosts:
+    - "ip-172-31-26-6.sa-east-1.compute.internal:18.229.85.38"
+volumes:
+  mongodb:
